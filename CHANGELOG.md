@@ -4,8 +4,11 @@
 
 ### Changed
 
-Initial version with basic support for pull union and intersection (does not
-explicitly support `*`)
+Initial version with basic support for pull union and intersection. It does not
+support the full range of Datomic syntax:
+
+- does not explicitly support `*`
+- does not correctly merge attributes with function invocation syntax
 
 See the test case for TODOs.
 

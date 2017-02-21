@@ -6,6 +6,15 @@ Functions to merge Datomic Pull syntax via union or intersection.
 
 FIXME
 
+## Limitations
+
+It does not currently support the full range of Datomic syntax:
+
+- does not explicitly support `*`
+- does not correctly merge attributes with function invocation syntax
+
+These are captured in commented-out tests.
+
 ## License
 
 Copyright © 2017 Lab79, Inc.
