@@ -7,7 +7,80 @@ Merge Datomic Pull syntax via union and intersection.
 
 ## Usage
 
-FIXME
+```clojure
+(require '[lab79.datomic-pullups :as dp])
+```
+
+Given two pull patterns, e.g.:
+
+```clojure
+(def pull1 [:foo :bar])
+(def pull2 [:foo :qux :cow])
+```
+
+We can get the union of them:
+
+```clojure
+(dp/compose-pull-patterns [pull1 pull2])
+```
+
+Result:
+
+```clojure
+(:foo :bar :qux :cow)
+```
+
+We can also get the intersection:
+
+```clojure
+(dp/intersect-pull-patterns pull1 pull2)
+```
+
+Result:
+
+```clojure
+[:foo]
+```
+
+It works on deeply nested patterns too:
+
+```clojure
+;; union
+
+(dp/compose-pull-patterns
+  [[{:user/access-groups
+     [{:access-group/members
+       [:person.id/ssn
+        {:person/name [:person.name/family]}]}]}]
+   [{:user/access-groups
+     [{:access-group/members
+       [{:person/name [:person.name/given]}]}]}]])
+
+;; =>
+
+(#:user{:access-groups
+  (#:access-group{:members
+    (:person.id/ssn #:person{:name (:person.name/family :person.name/given)})})})
+
+;; intersection
+
+(dp/intersect-pull-patterns
+  [{:user/access-groups
+     [{:access-group/members
+       [:person.id/ssn
+        {:person/name [:person.name/given :person.name/family]}]}]}]
+   [{:user/access-groups
+     [{:access-group/members
+       [{:person/name [:person.name/given]}]}]}])
+
+;; =>
+
+[#:user{:access-groups
+  [#:access-group{:members
+    [#:person{:name [:person.name/given]}]}]}]
+```
+
+See the [tests](test/lab79/datomic_pullups_test.clj) for more examples.
 
 ## Limitations
 
