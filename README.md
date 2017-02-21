@@ -22,5 +22,4 @@ These are captured in commented-out tests.
 
 Copyright © 2017 Lab79, Inc.
 
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+Distributed under the [MIT License](LICENSE).
