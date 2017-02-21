@@ -23,18 +23,18 @@
      (let [expected-result [{:user/access-groups
                              [{:access-group/members
                                [:patient.id/medicare-number
-                                :person/person.id/uuid
-                                :person/person.id/ssn
+                                :person.id/uuid
+                                :person.id/ssn
                                 {:person/name '[*]}]}]}]
 
            pull1 [{:user/access-groups
                    [{:access-group/members
                      [:patient.id/medicare-number
-                      :person/person.id/uuid]}]}]
+                      :person.id/uuid]}]}]
 
            pull2 [{:user/access-groups
                    [{:access-group/members
-                     [:person/person.id/ssn
+                     [:person.id/ssn
                       {:person/name '[*]}]}]}]]
 
        (is (= (dp/compose-pull-patterns [pull1 pull2]) expected-result)
@@ -154,7 +154,7 @@
              ;; first rule
              [{:user/access-groups
                [{:access-group/members
-                 [:person/person.id/ssn
+                 [:person.id/ssn
                   {:person/name [:person.name/family]}]}]}]
              ;; second rule
              [{:user/access-groups
