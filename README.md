@@ -27,11 +27,9 @@ We can get the union of them:
 
 ```clojure
 (dp/compose-pull-patterns [pull1 pull2])
-```
 
-Result:
+;;=>
 
-```clojure
 (:foo :bar :qux :cow)
 ```
 
@@ -39,11 +37,9 @@ We can also get the intersection:
 
 ```clojure
 (dp/intersect-pull-patterns pull1 pull2)
-```
 
-Result:
+;;=>
 
-```clojure
 [:foo]
 ```
 
