@@ -10,4 +10,4 @@ support the full range of Datomic syntax:
 
 See the test case for TODOs.
 
-[0.1.0](https://github.com/your-name/datomic-pullups/compare/master...0.1.0)
+[0.1.0](https://github.com/lab-79/datomic-pullups/compare/bc9dcd6a582d12b3fc3b83c3c461a10ae79d3f07...0.1.0)
