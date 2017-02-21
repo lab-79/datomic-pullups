@@ -2,6 +2,7 @@
 
 Merge Datomic Pull syntax via union and intersection.
 
+[![Clojars Project](https://img.shields.io/clojars/v/lab79/datomic-pullups.svg)](https://clojars.org/lab79/datomic-pullups)
 [![Build Status](https://travis-ci.org/lab-79/datomic-pullups.svg?branch=master)](https://travis-ci.org/lab-79/datomic-pullups)
 [![codecov](https://codecov.io/gh/lab-79/datomic-pullups/branch/master/graph/badge.svg)](https://codecov.io/gh/lab-79/datomic-pullups)
 
