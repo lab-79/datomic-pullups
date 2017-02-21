@@ -85,9 +85,8 @@ See the [tests](test/lab79/datomic_pullups_test.clj) for more examples.
 It does not currently support the full range of Datomic syntax:
 
 - does not explicitly support `*`
-- does not correctly merge attributes with function invocation syntax
 
-These are captured in commented-out tests.
+Limitations are captured in commented-out tests.
 
 ## License
 
