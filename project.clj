@@ -1,4 +1,4 @@
-(defproject lab79/datomic-pullups "0.1.1"
+(defproject lab79/datomic-pullups "0.1.2-SNAPSHOT"
   :description "Union and intersection for Datomic pull syntax"
   :url "https://github.com/lab-79/datomic-pullups"
   :license {:name "Eclipse Public License"
