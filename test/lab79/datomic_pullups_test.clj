@@ -163,7 +163,24 @@
            ;; intersection
            [{:user/access-groups
              [{:access-group/members
-               [{:person/name [:person.name/family]}]}]}]))))
+               [{:person/name [:person.name/family]}]}]}]))
+    (is (= (dp/intersect-pull-patterns
+             ;; first rule
+             [:db/id
+              :entity/uuid
+              :person/dob
+              :person/gender
+              {:contactable/email-addresses [:email-address/value]
+               :person/name [:person.name/given :person.name/family]}]
+
+             ;; second rule
+             [:entity/uuid
+              :person/dob
+              {:person/name [:person.name/given :person.name/family]}])
+           [:entity/uuid
+            :person/dob
+            {:person/name [:person.name/given :person.name/family]}])
+        "More than one join should be supported")))
 
 (deftest intersect-pull-with-tx-test
 
