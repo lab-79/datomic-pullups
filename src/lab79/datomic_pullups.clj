@@ -123,7 +123,7 @@
         right-join (->> right (filter map?) (apply merge))
         common-join-keys (clojure.set/intersection (set (keys left-join))
                                                    (set (keys right-join)))]
-    (cond-> (into [] common-keys)
+    (cond-> (vec common-keys)
       (not-empty common-join-keys) (conj
                                      (reduce
                                        (fn [intersected-join join-key]
