@@ -1,4 +1,5 @@
-(ns lab79.datomic-pullups)
+(ns lab79.datomic-pullups
+  (:require clojure.set))
 
 ;; Pull Union helpers
 
@@ -106,24 +107,6 @@
               []
               patterns)))
 
-;; Pull Intersection helpers
-
-(defn search-for-shared-component
-  "Find pattern-component inside pattern.  If pattern-component is:
-   - a keyword, simply find the same keyword
-   - a map, find a map with the same keyword in it (ignore values)"
-  [pattern pattern-component]
-  (not-empty
-    (filter
-      (fn [candidate-pattern-component]
-        (cond
-          (keyword? pattern-component) (= candidate-pattern-component pattern-component)
-          (map? pattern-component) (let [k (-> pattern-component keys first)]
-                                     (and
-                                       (map? candidate-pattern-component)
-                                       (contains? candidate-pattern-component k)))))
-      pattern)))
-
 ;; Pull Intersection
 
 (defn intersect-pull-patterns
@@ -134,24 +117,22 @@
    Order doesn't matter (unless using star, which we don't by convnetion);
    intersection is commutative."
   [left right]
-  (reduce
-    (fn [acc pull-component]
-      (let [search-result (search-for-shared-component right pull-component)]
-        (if search-result
-          ;; if found, intersect pull patterns on shared map keys or simply
-          ;; keep if a keyword in the simple case
-          (cond
-            (keyword? pull-component) (conj acc pull-component)
-            (map? pull-component) (let [k (-> pull-component keys first)]
-                                    (conj acc
-                                          {k
-                                           (intersect-pull-patterns
-                                             (-> pull-component vals first)
-                                             (-> search-result first k))})))
-          ;; no shared component found; elide this segment
-          acc)))
-    []
-    left))
+  (let [common-keys (clojure.set/intersection (set (filter keyword? left))
+                                              (set (filter keyword? right)))
+        left-join (->> left (filter map?) (apply merge))
+        right-join (->> right (filter map?) (apply merge))
+        common-join-keys (clojure.set/intersection (set (keys left-join))
+                                                   (set (keys right-join)))]
+    (cond-> (vec common-keys)
+      (not-empty common-join-keys) (conj
+                                     (reduce
+                                       (fn [intersected-join join-key]
+                                         (assoc intersected-join
+                                           join-key (intersect-pull-patterns
+                                                      (get left-join join-key)
+                                                      (get right-join join-key))))
+                                       {}
+                                       common-join-keys)))))
 
 (defn intersect-pull-with-tx
   "Incomplete implementation. Intent is to merge a pull pattern with a Datomic

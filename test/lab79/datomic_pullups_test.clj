@@ -110,30 +110,7 @@
 
 ;; intersection
 
-(deftest search-for-shared-component-test
-  (testing "Simple case where keyword exists"
-    (is (not-empty (dp/search-for-shared-component [:foo :bar :baz] :baz))))
-  (testing "Simple case where keyword doesn't exist"
-    (is (empty? (dp/search-for-shared-component [:foo :bar :baz] :qux))))
-  (testing "Search for map with shared key"
-    (is (= (dp/search-for-shared-component
-             [:foo {:m [:bar]} :baz] {:m [:ok]})
-           [{:m [:bar]}])))
-  (testing "Search for map with no shared key"
-    (is (= (dp/search-for-shared-component
-             [:foo {:m [:bar]} :baz] {:no [:ok]})
-           nil)))
-
-  ;; TODO
-  #_(testing "TODO: attribute in a request should be normalized to its name.
-              Access control does not care about limit or default expressions on
-              attributes."
-    (is (not-empty
-          (dp/search-for-shared-component
-            ;; access rule allowing acces to :foo
-            [:foo]
-            ;; request includes a limit
-            '(limit :foo 10))))))
+; TODO support limit on pull pattern
 
 (deftest pull-patterns-intersect-test
 
@@ -163,7 +140,27 @@
            ;; intersection
            [{:user/access-groups
              [{:access-group/members
-               [{:person/name [:person.name/family]}]}]}]))))
+               [{:person/name [:person.name/family]}]}]}]))
+    (is (empty? (dp/intersect-pull-patterns
+                  [{:x [:a]}]
+                  [{:y [:b]}])))
+    (is (= (dp/intersect-pull-patterns
+             ;; first rule
+             [:db/id
+              :entity/uuid
+              :person/dob
+              :person/gender
+              {:contactable/email-addresses [:email-address/value]
+               :person/name [:person.name/given :person.name/family]}]
+
+             ;; second rule
+             [:entity/uuid
+              :person/dob
+              {:person/name [:person.name/given :person.name/family]}])
+           [:person/dob
+            :entity/uuid
+            {:person/name [:person.name/family :person.name/given]}])
+        "More than one join should be supported")))
 
 (deftest intersect-pull-with-tx-test
 
